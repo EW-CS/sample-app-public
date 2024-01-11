@@ -1,0 +1,54 @@
+#HTTP port initialization settings
+server:
+  port: 8999
+  error:
+    whitelabel.enabled: false
+  servlet.context-path: /ocs-providerintegration-service
+#Spring, Sleuth and Zipkin configurations
+spring:
+  application.name: ocs-csfile-manager
+  datasource:
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: tial_manager
+      minimum-idle: 1
+      maximum-pool-size: 4
+      idle-timeout: 30000
+      max-lifetime: 2000000
+      connection-timeout: 600000
+      leak-detection-threshold: 180000
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+      data-source-properties:
+        useServerPrepStmts: false
+        cachePrepStmts: true
+        prepStmtCacheSize: 500
+        prepStmtCacheSqlLimit: 1024y
+  jpa:
+    properties.hibernate: org.postgresql.Driver
+    show-sql: true
+    generate-ddl: false
+  liquibase:
+    enabled: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    default-schema: tial_manager
+    liquibase-schema: tial_manager
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    database-change-log-table: ocsProductDomainSchemaChangeLog
+    database-change-log-lock-table: ocsProductDomainSchemaChangeLogLock
+
+  sleuth:
+    otel:
+      config:
+        trace-id-ratio-based: 1.0
+      exporter:
+        otlp:
+          endpoint: http://localhost:4317
+
+volume:
+  upload:
+    active: /apps/data/referencedata/active

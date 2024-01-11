@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProfile name ="devint, prod">
+        <property name="log_folder" value="/services/logs"/>
+    </springProfile>
+    <springProfile>
+        <property name="log_folder" value="logs"/>
+    </springProfile>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log_folder}/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log_folder}/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{dd-MM-yyyy HH:mm:ss.SSS zzz} %p %t - [correlationId:%X{CorrelationId:-}, traceId:%X{traceId:-}, spanId:%X{spanId:-}] | %logger{50}.%method:%line | %m%n%rEx</pattern>
+        </encoder>
+    </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{dd-MM-yyyy HH:mm:ss.SSS zzz} %p %t - [correlationId:%X{CorrelationId:-}, traceId:%X{traceId:-}, spanId:%X{spanId:-}] | %logger{50}.%method:%line | %m%n%rEx</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <appender name="ASYNC-STDOUT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT" />
+    </appender>
+    <logger name="org.zalando.logbook" level="TRACE"/>
+    <logger name="org.springframework.web.servlet" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC-STDOUT"/>
+        <appender-ref ref="ASYNC-FILE"/>
+    </root>
+
+    <springProfile name="local,test">
+        <root level="DEBUG">
+            <appender-ref ref="ASYNC-STDOUT"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="int">
+        <root level="INFO">
+            <appender-ref ref="ASYNC-STDOUT"/>
+            <appender-ref ref="ASYNC-FILE"/>
+        </root>
+    </springProfile>
+
+    <jmxConfigurator/>
+</configuration>

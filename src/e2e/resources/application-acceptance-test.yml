@@ -1,0 +1,30 @@
+#HTTP port initialization settings
+server:
+  port: 8999
+  error:
+    whitelabel.enabled: false
+
+#Spring, Sleuth and Zipkin configurations
+spring:
+  application.name: ocs-providerintegration-service
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      driver-class-name: org.postgresql.Driver
+      schema: pets
+  jpa:
+    properties.hibernate: org.postgresql.Driver
+    show-sql: true
+    generate-ddl: false
+  liquibase:
+    enabled: true
+    url: ${DB_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    default-schema: public
+    liquibase-schema: pets
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    database-change-log-table: ocsProductDomainSchemaChangeLog
+    database-change-log-lock-table: ocsProductDomainSchemaChangeLogLock

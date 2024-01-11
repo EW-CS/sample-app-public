@@ -1,0 +1,45 @@
+#HTTP port initialization settings
+server:
+  port: 8999
+  error:
+    whitelabel.enabled: false
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/xml,text/plain,image/jpeg
+    min-response-size: 1024
+#  servlet.context-path: /eqz-providerintegration-service
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+#Spring configurations
+spring:
+  application.name: eqz-providerintegration-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: password
+    hikari:
+      schema: pets
+      minimum-idle: 1
+      maximum-pool-size: 4
+      idle-timeout: 30000
+      max-lifetime: 2000000
+      connection-timeout: 600000
+      leak-detection-threshold: 180000
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+      data-source-properties:
+        useServerPrepStmts: false
+        cachePrepStmts: true
+        prepStmtCacheSize: 500
+        prepStmtCacheSqlLimit: 1024y
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties.hibernate: org.postgresql.Driver
+    show-sql: true
+    generate-ddl: false
+dependencies:
+  user:
+    username: PrasadIRevanaki
+    password: Sydney10.0
